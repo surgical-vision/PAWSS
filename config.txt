@@ -38,37 +38,37 @@ sequenceBasePath = sequences
  seqName = Football1
 # seqName = Freeman1
 # seqName = Freeman3
- seqName = Freeman4  
- seqName = Girl
- seqName = Ironman
- seqName = Jogging-1
- seqName = Jogging-2
- seqName = Jumping
- seqName = Lemming
+# seqName = Freeman4  
+# seqName = Girl
+# seqName = Ironman
+# seqName = Jogging-1
+# seqName = Jogging-2
+# seqName = Jumping
+# seqName = Lemming
 
 #  30 - 39
- seqName = Liquor
- seqName = Matrix
- seqName = Mhyang
- seqName = MotorRolling
- seqName = MountainBike
- seqName = Shaking
- seqName = Singer1
- seqName = Singer2
- seqName = Skating1
- seqName = Skiing
+# seqName = Liquor
+# seqName = Matrix
+# seqName = Mhyang
+# seqName = MotorRolling
+# seqName = MountainBike
+# seqName = Shaking
+# seqName = Singer1
+# seqName = Singer2
+# seqName = Skating1
+# seqName = Skiing
 
 #  40 - 49
- seqName = Soccer
- seqName = Subway
- seqName = Suv
- seqName = Sylvester
- seqName = Tiger1
- seqName = Tiger2
- seqName = Trellis
- seqName = Walking
- seqName = Walking2
- seqName = Woman
+# seqName = Soccer
+# seqName = Subway
+# seqName = Suv
+# seqName = Sylvester
+# seqName = Tiger1
+# seqName = Tiger2
+# seqName = Trellis
+# seqName = Walking
+# seqName = Walking2
+# seqName = Woman
 
 
 # seed for random number generator.
