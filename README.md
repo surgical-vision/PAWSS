@@ -10,7 +10,7 @@ Tracking can be performed on video sequences.
 This code has been tested using Opencv 3.0, Boost 1.59.0 and Eigen 3.2.6.
 
 ## Compilation
-CMake is used for cross-platform compilation.
+CMake is used for cross-platform compilation. <br />
 
 **Note: make sure you compile the code in Release mode, as a Debug build will result in significantly slower performance.**
 
