@@ -1,0 +1,99 @@
+# quiet mode disables all visual output (for experiments).
+quietMode = 0
+
+# debug mode enables additional drawing and visualisation.
+debugMode = 1
+
+# base path for video sequences.
+sequenceBasePath = sequences
+
+# video sequence to run the tracker on.
+
+#  0 - 9
+# seqName = Basketball
+# seqName = Bolt
+# seqName = Boy
+# seqName = CarDark
+# seqName = Car4
+# seqName = CarScale
+# seqName = Coke
+# seqName = Couple
+# seqName = Crossing
+# seqName = David
+# seqName = David2
+
+#  10 - 19
+# seqName = David3
+# seqName = Deer 
+# seqName = Dog1
+# seqName = Doll
+# seqName = Dudek
+# seqName = FaceOcc1
+# seqName = FaceOcc2
+# seqName = Fish
+# seqName = FleetFace
+# seqName = Football
+
+#  20 - 29
+ seqName = Football1
+# seqName = Freeman1
+# seqName = Freeman3
+ seqName = Freeman4  
+ seqName = Girl
+ seqName = Ironman
+ seqName = Jogging-1
+ seqName = Jogging-2
+ seqName = Jumping
+ seqName = Lemming
+
+#  30 - 39
+ seqName = Liquor
+ seqName = Matrix
+ seqName = Mhyang
+ seqName = MotorRolling
+ seqName = MountainBike
+ seqName = Shaking
+ seqName = Singer1
+ seqName = Singer2
+ seqName = Skating1
+ seqName = Skiing
+
+#  40 - 49
+ seqName = Soccer
+ seqName = Subway
+ seqName = Suv
+ seqName = Sylvester
+ seqName = Tiger1
+ seqName = Tiger2
+ seqName = Trellis
+ seqName = Walking
+ seqName = Walking2
+ seqName = Woman
+
+
+# seed for random number generator.
+seed = 0
+
+# patch number
+patchNumX = 7
+patchNumY = 7
+
+# SVM regularization parameter.
+svmC = 100.0
+# SVM budget size (0 = no budget).
+svmBudgetSize = 100
+
+# image features to use.
+# format is: feature kernel [kernel-params]
+# where:
+#   feature = patchGrad/patchGrayGrad/patchRgb/patchRgbGrad/patchHsv/patchHsvGrad
+#   kernel = linear/intersection
+#   for kernel=gaussian, kernel-params is sigma
+
+feature = patchHsvGrad linear
+
+# Tracker scale type: one/gradual/all
+scaleType = all
+
+
+
