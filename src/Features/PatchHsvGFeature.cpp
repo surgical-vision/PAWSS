@@ -18,7 +18,7 @@ PatchHsvGFeature::PatchHsvGFeature(const Config &conf) :
     mBinNum = mHsvBinNum + mGradBinNum;
     SetCount(mBinNum*mPatchNumX*mPatchNumY);
 
-//    mPatchWeightInitialized = false;
+    mPatchWeightInitialized = false;
     mPatchWeights = Eigen::VectorXd::Ones(mPatchNumX*mPatchNumY);
 
     // todo
@@ -248,13 +248,13 @@ void PatchHsvGFeature::UpdateWeightModel(const Sample &s)
     }
     double wmax = patchWeights.maxCoeff();
 
-//    if(!mPatchWeightInitialized) {
-//        mPatchWeights = patchWeights / wmax;
-//        mPatchWeightInitialized = true;
-//    }
-//    else {
+    if(!mPatchWeightInitialized) {
+        mPatchWeights = patchWeights / wmax;
+        mPatchWeightInitialized = true;
+    }
+    else {
         mPatchWeights = (1-kAlpha) * mPatchWeights + kAlpha * patchWeights / wmax;
-//    }
+    }
 
     binImg.release();
     weightImg.release();

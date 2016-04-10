@@ -5,7 +5,7 @@ quietMode = 0
 debugMode = 1
 
 # base path for video sequences.
-sequenceBasePath = sequences
+# sequenceBasePath = sequences
 
 # video sequence to run the tracker on.
 

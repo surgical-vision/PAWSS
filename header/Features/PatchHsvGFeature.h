@@ -32,7 +32,7 @@ private:
     double mColorWeight;
     double mGradWeight;
 
-//    bool mPatchWeightInitialized;
+    bool mPatchWeightInitialized;
 
 };
 

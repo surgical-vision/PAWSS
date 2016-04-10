@@ -243,7 +243,6 @@ void PatchRgbGFeature::UpdateWeightModel(const Sample &s)
         patchWeights[pid] = weight;
     }
     double wmax = patchWeights.maxCoeff();
-
     mPatchWeights = (1-kAlpha) * mPatchWeights + kAlpha * patchWeights / wmax;
 
     binImg.release();
