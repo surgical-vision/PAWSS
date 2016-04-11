@@ -20,6 +20,7 @@ public:
 
     enum FeatureType
     {
+        kFeatureTypeNone,
         kFeatureTypePatchGray,
         kFeatureTypePatchRgb,
         kFeatureTypePatchHsv,
@@ -46,6 +47,10 @@ public:
 
     bool mQuietMode;
     bool mDebugMode;
+    bool mUseCamera;
+    bool mSaveFrame;
+    bool mSaveBB;
+    bool mPrecision;
     std::string mSeqBasePath;
     std::vector<std::string> mSeqNames;
     std::string mSeqName;

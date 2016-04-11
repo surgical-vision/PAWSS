@@ -23,8 +23,12 @@ Config::Config(const std::string& path)
         if (iss.fail() || tmp != "=" || name[0] == '#') continue;
 
         if      (name == "seed") iss >> mSeed;
-        else if (name == "quiteMode") iss >> mQuietMode;
+        else if (name == "quietMode") iss >> mQuietMode;
         else if (name == "debugMode") iss >> mDebugMode;
+        else if (name == "useCamera") iss >> mUseCamera;
+        else if (name == "saveFrame") iss >> mSaveFrame;
+        else if (name == "saveBoundingBox") iss >> mSaveBB;
+        else if (name == "savePrecisionFile") iss >> mPrecision;
         else if (name == "sequenceBasePath") iss >> mSeqBasePath;
         else if (name == "svmC") iss >> mSvmC;
         else if (name == "svmBudgetSize") iss >> mSvmBudgetSize;
@@ -93,10 +97,18 @@ Config::Config(const std::string& path)
     mBbFileName = FeatureName(mFeatureKernelPair.mFeature) + "_" + std::to_string(mPatchNumX) + "_" + std::to_string(mPatchNumY) + "_" + ScaleName(mScaleType) + "_bb.txt";
     mPrecFileName = FeatureName(mFeatureKernelPair.mFeature) + "_" + std::to_string(mPatchNumX) + "_" + std::to_string(mPatchNumY) + "_" + ScaleName(mScaleType) + "_prec.txt";
 
+    if(mUseCamera)
+    {
+        mSaveBB = false;
+        mPrecision = false;
+    }
 }
 
 bool Config::check()
 {
+    if(mFeatureKernelPair.mFeature == kFeatureTypeNone)
+        return false;
+
     return true;
 }
 
@@ -104,6 +116,11 @@ void Config::SetDefaults()
 {
     mQuietMode = false;
     mDebugMode = false;
+    mUseCamera = false;
+
+    mSaveFrame = false;
+    mSaveBB = false;
+    mPrecision = false;
 
     mSeqBasePath = "sequences";
     mSeqName = "";
@@ -116,7 +133,7 @@ void Config::SetDefaults()
     mPatchNumX = 1;
     mPatchNumY = 1;
     mSearchRadius = 0;
-    mFeatureKernelPair.mFeature = kFeatureTypePatchHsvG;
+    mFeatureKernelPair.mFeature = kFeatureTypeNone;
     mFeatureKernelPair.mKernel = kKernelTypeLinear;
     mScaleType = kScaleTypeAll;
 
@@ -178,13 +195,22 @@ std::string Config::ScaleName(ScaleType s)
 
 std::ostream& operator <<(std::ostream &out, const Config &conf)
 {
-    out << "Config: todo"<<std::endl;
+    out << "Config:"<<std::endl;
     out << "    quiteMode           = " << conf.mQuietMode << std::endl;
     out << "    debugMode           = " << conf.mDebugMode << std::endl;
+    out << "    useCamera           = " << conf.mUseCamera << std::endl;
+    out << "    saveFrame           = " << conf.mSaveFrame <<std::endl;
+    out << "    saveBoundingBox     = " << conf.mSaveBB << std::endl;
+    out << "    savePrecisionFile   = " << conf.mPrecision << std::endl;
     out << "    sequenceBasePath    = " << conf.mSeqBasePath << std::endl;
-    for (int i=0; i< (int) conf.mSeqNames.size(); ++i)
-        out << "    sequenceName        = " << conf.mSeqNames[i] << std::endl;
+    if(!conf.mUseCamera)
+    {
+        for (int i=0; i< (int) conf.mSeqNames.size(); ++i)
+            out << "    sequenceName        = " << conf.mSeqNames[i] << std::endl;
+    }
     out << "    seed                = " << conf.mSeed << std::endl;
+    out << "    patchNumX           = " << conf.mPatchNumX << std::endl;
+    out << "    patchNumY           = " << conf.mPatchNumY << std::endl;
     out << "    svmC                = " << conf.mSvmC << std::endl;
     out << "    svmBudgetSize       = " << conf.mSvmBudgetSize << std::endl;
     out << "    feature             = " << Config::FeatureName(conf.mFeatureKernelPair.mFeature) << std::endl;
@@ -196,6 +222,7 @@ std::ostream& operator <<(std::ostream &out, const Config &conf)
             out << " " << conf.mFeatureKernelPair.mParams[i];
         out << std::endl;
     }
+    out << "    scaleType           = " << Config::ScaleName(conf.mScaleType) << std::endl;
 
     return out;
 }

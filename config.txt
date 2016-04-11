@@ -1,11 +1,25 @@
 # quiet mode disables all visual output (for experiments).
-quietMode = 0
+quietMode =0
 
 # debug mode enables additional drawing and visualisation.
 debugMode = 1
 
+# useCamera enables webcam
+useCamera = 0
+
+# saveFrame indicates whether saving the tracked frame image
+saveFrame = 0
+
+# saveBoundingBox indicates whether saving the tracked bounding box file. 
+# If usingCamera, automatically set to 0.
+saveBoundingBox = 1
+
+# if there exists ground truth for the sequence, savePrecisionFile indicates whether computing the precision rate for that sequence.
+# If usingCamera, automatically set to 0.
+savePrecisionFile = 1
+
 # base path for video sequences.
-# sequenceBasePath = sequences
+ sequenceBasePath = sequences
 
 # video sequence to run the tracker on.
 
@@ -71,12 +85,12 @@ debugMode = 1
 # seqName = Woman
 
 
-# seed for random number generator.
-seed = 0
-
 # patch number
 patchNumX = 7
 patchNumY = 7
+
+# seed for random number generator.
+seed = 0
 
 # SVM regularization parameter.
 svmC = 100.0
@@ -88,12 +102,9 @@ svmBudgetSize = 100
 # where:
 #   feature = patchGrad/patchGrayGrad/patchRgb/patchRgbGrad/patchHsv/patchHsvGrad
 #   kernel = linear/intersection
-#   for kernel=gaussian, kernel-params is sigma
+#   for kernel=gaussian, kernel-params is sigma (not implemented…)
 
 feature = patchHsvGrad linear
 
 # Tracker scale type: one/gradual/all
 scaleType = all
-
-
-
