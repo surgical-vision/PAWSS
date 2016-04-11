@@ -40,20 +40,27 @@ void chooseRoiCallBack(int event, int x, int y, int flags, void* params)
 
 void chooseRoi(const cv::Mat& img)
 {
+    std::cout << "manually choose roi: " << std::endl;
+    std::cout << "RIGHT click and drag roi on the image"<< std::endl;
+    std::cout << "Press 'i' to display roi information." << std::endl;
+    std::cout << "Press 'r' to reset roi." << std::endl;
+    std::cout << "Press 'q' or 'ESC' to finish." << std::endl;
+    std::cout << std::endl;
+
     while(true)
     {
         cv::Mat img_copy= img.clone();
         rectangle(img_copy, roi, COLOR_GREEN);
         cv::putText(img_copy, "["+std::to_string(int(roi.XMin()))+","+std::to_string(int(roi.YMin()))+","
                                  +std::to_string(int(roi.Width()))+","+std::to_string(int(roi.Height()))+"]",
-                                 cv::Point(10, 30), cv::FONT_HERSHEY_PLAIN, 0.8, COLOR_YELLOW);
+                                 cv::Point(10, 20), cv::FONT_HERSHEY_PLAIN, 0.8, COLOR_GREEN);
         cv::imshow("choose roi", img_copy);
 
         int k = cv::waitKey(1);
         if(k == 27 || k == 'q')
             break;
         if(k == 'i')
-            std::cout<<"ROI: tl "<<roi.XMin()<<" br "<<roi.YMin()<<std::endl;
+            std::cout<<"ROI: "<< roi <<std::endl;
         if(k == 'r')
         {
             mouse_drawing = false;
@@ -118,6 +125,9 @@ bool trackSequence(Config& conf, const int seqIdx)
 
         if(conf.mUseCamera)
         {
+            std::cout << "use web camera: " << std::endl;
+            std::cout << "Prese 'ESC' to start choose roi"<< std::endl;
+            std::cout << std::endl;
             while(true)
             {
                 cv::Mat tmp;
