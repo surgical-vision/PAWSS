@@ -30,6 +30,8 @@ If no path is given the application will attempt to use ./config.txt.
 
 Please see config.txt for configuration options.
 
+For manully selecting region of interest (ROI), RIGHT click and drag on the image of window "choose roi".
+
 ## Data
 The code is tested using the [Online Tracking Benchmark (OTB) dataset](https://sites.google.com/site/trackerbenchmark/benchmarks/v10). 
 
