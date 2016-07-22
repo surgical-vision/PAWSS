@@ -1,22 +1,22 @@
 # quiet mode disables all visual output (for experiments).
-quietMode =0
+quietMode = 1
 
 # debug mode enables additional drawing and visualisation.
-debugMode = 1
+debugMode = 0
 
 # useCamera enables webcam
 useCamera = 0
 
 # saveFrame indicates whether saving the tracked frame image
-saveFrame = 1
+saveFrame = 0
 
 # saveBoundingBox indicates whether saving the tracked bounding box file. 
 # If usingCamera, automatically set to 0.
-saveBoundingBox = 1
+saveBoundingBox = 0
 
 # if there exists ground truth for the sequence, savePrecisionFile indicates whether computing the precision rate for that sequence.
 # If usingCamera, automatically set to 0.
-savePrecisionFile = 1
+savePrecisionFile = 0
 
 # base path for video sequences.
 sequenceBasePath = /Users/xiaofeidu/mData/vot2015
@@ -98,8 +98,8 @@ seqName = wiper
 
 
 # patch number
-patchNumX = 7
-patchNumY = 7
+patchNumX = 8
+patchNumY = 8
 
 # seed for random number generator.
 seed = 0
@@ -116,7 +116,7 @@ svmBudgetSize = 100
 #   kernel = linear/intersection
 #   for kernel=gaussian, kernel-params is sigma (not implemented…)
 
-feature = patchHsvGrad linear
+feature = patchRgbGrad linear
 
 # Tracker scale type: one/gradual/all
 scaleType = all

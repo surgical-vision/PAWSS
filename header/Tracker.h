@@ -11,8 +11,7 @@ class Kernel;
 class structuredSVM;
 class Sample;
 class ScaleEstimator;
-class motModel;
-class pixelSim;
+
 
 
 class Tracker
@@ -56,9 +55,6 @@ private:
     float mScale;
     std::vector<float> mScales;
     ScaleEstimator* mScaleEstimator;
-
-    motModel* mMotEstimator;
-    pixelSim* mPixelSim;
 
 };
 
