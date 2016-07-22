@@ -16,6 +16,7 @@ PatchHsvFeature::PatchHsvFeature(const Config &conf) :
     mBinNum = mHsvFeature.GetCount();
     SetCount(mBinNum*mPatchNumX*mPatchNumY);
 
+    mPatchWeightInitialized = false;
     mPatchWeights = Eigen::VectorXd::Ones(mPatchNumX*mPatchNumY);
 
 #if VERBOSE
@@ -152,8 +153,73 @@ void PatchHsvFeature::UpdateFeatureVector(const Sample &s)
 }
 
 
+//void PatchHsvFeature::UpdateWeightModel(const Sample &s)
+//{
+//    const cv::Mat& hsvImg = s.getImage().GetColorImage();
+//    const int imgH = hsvImg.rows;
+//    const int imgW = hsvImg.cols;
+
+//    IntRect inner_rect, bound_rect, outer_rect;
+//    inner_rect =s.getRect();
+
+//    float x_min, x_max, y_min, y_max;
+//    x_min = std::max(0, int(inner_rect.XMin()-2));
+//    y_min = std::max(0, int(inner_rect.YMin()-2));
+//    x_max = std::min(imgW, int(inner_rect.XMax()+2));
+//    y_max = std::min(imgH, int(inner_rect.YMax()+2));
+//    bound_rect = IntRect(x_min, y_min, x_max-x_min, y_max-y_min);
+
+//    x_min = std::max(0, int(inner_rect.XMin()-30));
+//    y_min = std::max(0, int(inner_rect.YMin()-30));
+//    x_max = std::min(imgW, int(inner_rect.XMax()+30));
+//    y_max = std::min(imgH, int(inner_rect.YMax()+30));
+//    outer_rect = IntRect(x_min, y_min, x_max-x_min, y_max-y_min);
+
+//    cv::Mat binImg = cv::Mat::zeros(hsvImg.size(), CV_32SC1);
+//    cv::Mat weightImg = cv::Mat::zeros(hsvImg.size(), CV_32FC1);
+//    mHsvFeature.getBinImg(hsvImg, outer_rect, binImg);
+//    mWeightModel.getProbImg(binImg, outer_rect, weightImg);
+//    mWeightInteg = cv::Mat::zeros(imgH+1, imgW+1, CV_64FC1);
+//    cv::integral(weightImg, mWeightInteg, CV_64F);
+
+//    std::vector<IntRect> patchImgRects;
+//    setPatchRect(cv::Size(inner_rect.Width(), inner_rect.Height()));
+//    for(int pid=0; pid<mPatchNumX*mPatchNumY; ++pid)
+//    {
+//        IntRect r = mPatchRects[pid];
+//        // add offset
+//        r.SetXMin(r.XMin() + inner_rect.XMin());
+//        r.SetYMin(r.YMin() + inner_rect.YMin());
+//        patchImgRects.push_back(r);
+//    }
+
+//    // update the weight model
+//    mWeightModel.updateWProb(binImg, mPatchWeights, patchImgRects, bound_rect, outer_rect);
+
+//    // update the patch weight
+//    Eigen::VectorXd patchWeights = Eigen::VectorXd::Zero(mPatchNumX*mPatchNumY);
+//    for(int pid=0; pid<mPatchNumX*mPatchNumY; ++pid)
+//    {
+//        const IntRect& r = patchImgRects[pid];
+//        double weight = ( mWeightInteg.at<double>(r.YMin(), r.XMin())
+//                        + mWeightInteg.at<double>(r.YMax(), r.XMax())
+//                        - mWeightInteg.at<double>(r.YMax(), r.XMin())
+//                        - mWeightInteg.at<double>(r.YMin(), r.XMax()))/r.Area();
+//        patchWeights[pid] = weight;
+//    }
+//    double wmax = patchWeights.maxCoeff();
+
+//    mPatchWeights = (1-kAlpha) * mPatchWeights + kAlpha * patchWeights / wmax;
+
+//    binImg.release();
+//    weightImg.release();
+//    patchImgRects.clear();
+
+//}
+
 void PatchHsvFeature::UpdateWeightModel(const Sample &s)
 {
+
     const cv::Mat& hsvImg = s.getImage().GetColorImage();
     const int imgH = hsvImg.rows;
     const int imgW = hsvImg.cols;
@@ -174,13 +240,6 @@ void PatchHsvFeature::UpdateWeightModel(const Sample &s)
     y_max = std::min(imgH, int(inner_rect.YMax()+30));
     outer_rect = IntRect(x_min, y_min, x_max-x_min, y_max-y_min);
 
-    cv::Mat binImg = cv::Mat::zeros(hsvImg.size(), CV_32SC1);
-    cv::Mat weightImg = cv::Mat::zeros(hsvImg.size(), CV_32FC1);
-    mHsvFeature.getBinImg(hsvImg, outer_rect, binImg);
-    mWeightModel.getProbImg(binImg, outer_rect, weightImg);
-    mWeightInteg = cv::Mat::zeros(imgH+1, imgW+1, CV_64FC1);
-    cv::integral(weightImg, mWeightInteg, CV_64F);
-
     std::vector<IntRect> patchImgRects;
     setPatchRect(cv::Size(inner_rect.Width(), inner_rect.Height()));
     for(int pid=0; pid<mPatchNumX*mPatchNumY; ++pid)
@@ -192,8 +251,23 @@ void PatchHsvFeature::UpdateWeightModel(const Sample &s)
         patchImgRects.push_back(r);
     }
 
+    cv::Mat binImg = cv::Mat::zeros(hsvImg.size(), CV_32SC1);
+    cv::Mat weightImg = cv::Mat::zeros(hsvImg.size(), CV_32FC1);
+    mHsvFeature.getBinImg(hsvImg, outer_rect, binImg);
+
+
     // update the weight model
     mWeightModel.updateWProb(binImg, mPatchWeights, patchImgRects, bound_rect, outer_rect);
+
+
+    mWeightModel.getProbImg(binImg, outer_rect, weightImg);
+    mWeightInteg = cv::Mat::zeros(imgH+1, imgW+1, CV_64FC1);
+    cv::integral(weightImg, mWeightInteg, CV_64F);
+
+
+
+//    // update the weight model
+//    mWeightModel.updateWProb(binImg, mPatchWeights, patchImgRects, bound_rect, outer_rect);
 
     // update the patch weight
     Eigen::VectorXd patchWeights = Eigen::VectorXd::Zero(mPatchNumX*mPatchNumY);
@@ -204,11 +278,20 @@ void PatchHsvFeature::UpdateWeightModel(const Sample &s)
                         + mWeightInteg.at<double>(r.YMax(), r.XMax())
                         - mWeightInteg.at<double>(r.YMax(), r.XMin())
                         - mWeightInteg.at<double>(r.YMin(), r.XMax()))/r.Area();
+
         patchWeights[pid] = weight;
+//       // test: map weight to 2^(weight)-1
+//        patchWeights[pid] = exp2(weight)-1;
     }
     double wmax = patchWeights.maxCoeff();
 
-    mPatchWeights = (1-kAlpha) * mPatchWeights + kAlpha * patchWeights / wmax;
+    if(!mPatchWeightInitialized) {
+        mPatchWeights = patchWeights / wmax;
+        mPatchWeightInitialized = true;
+    }
+    else {
+        mPatchWeights = (1-kAlpha) * mPatchWeights + kAlpha * patchWeights / wmax;
+    }
 
     binImg.release();
     weightImg.release();

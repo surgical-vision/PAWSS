@@ -111,13 +111,47 @@ bool readGtFile(const std::string &filePath, std::vector<FloatRect> &BBs)
     float xmin, ymin, width, height;
     while(getline(gtFile, gtLine))
     {
-        // the gt is seperated by comma
-        sscanf(gtLine.c_str(), "%f,%f,%f,%f", &xmin, &ymin, &width, &height);
-        if(width<0 || height<0){
-            return false;}
-        else{
-            BBs.push_back(FloatRect(xmin, ymin, width, height));}
+          std::vector<float> digits;
+          std::stringstream ss(gtLine);
+          float v;
+          while(ss >> v)
+          {
+              digits.push_back(v);
+              if(ss.peek() == ',' || ss.peek() == ' ')
+                  ss.ignore();
+          }
+          if(digits.size() == 4)
+          {
+              FloatRect bb(digits[0], digits[1], digits[2], digits[3]);
+              if(bb.Width() < 0 || bb.Height() < 0) {
+                  return false; }
+              else {
+                  BBs.push_back(bb); }
+          }
+          else if(digits.size() == 8)
+          {
+              FloatRect bb = Polygon2Rect(digits);
+              if(bb.Width() < 0 || bb.Height() < 0) {
+                  return false;
+              }
+              else {
+                  BBs.push_back(bb);
+              }
+          }
+          else {
+              return false;
+          }
+
     }
+//    while(getline(gtFile, gtLine))
+//    {
+//        // the gt is seperated by comma
+//        sscanf(gtLine.c_str(), "%f,%f,%f,%f", &xmin, &ymin, &width, &height);
+//        if(width<0 || height<0){
+//            return false;}
+//        else{
+//            BBs.push_back(FloatRect(xmin, ymin, width, height));}
+//    }
     return true;
 }
 
@@ -224,6 +258,43 @@ void getUnionRect(const std::vector<FloatRect> &rects, FloatRect& union_r)
     union_r = FloatRect(x_min, y_min, x_max-x_min, y_max-y_min);
 }
 
+
+void Polygon2Rect(const std::vector<float> &pts, FloatRect &rect)
+{
+    assert(int(pts.size()) == 8);
+    float x_min = FLT_MAX;
+    float y_min = FLT_MAX;
+    float x_max = -FLT_MAX;
+    float y_max = -FLT_MAX;
+    for(int i=0; i< pts.size()/2; ++i)
+    {
+        x_min = std::min(x_min, pts[2*i]);
+        y_min = std::min(y_min, pts[2*i+1]);
+        x_max = std::max(x_max, pts[2*i]);
+        y_max = std::max(y_max, pts[2*i+1]);
+    }
+    rect = FloatRect(x_min, y_min, x_max-x_min, y_max-y_min);
+}
+
+
+
+FloatRect Polygon2Rect(const std::vector<float> &pts)
+{
+    assert(int(pts.size()) == 8);
+    float x_min = FLT_MAX;
+    float y_min = FLT_MAX;
+    float x_max = -FLT_MAX;
+    float y_max = -FLT_MAX;
+    for(int i=0; i< pts.size()/2; ++i)
+    {
+        x_min = std::min(x_min, pts[2*i]);
+        y_min = std::min(y_min, pts[2*i+1]);
+        x_max = std::max(x_max, pts[2*i]);
+        y_max = std::max(y_max, pts[2*i+1]);
+    }
+    return FloatRect(x_min, y_min, x_max-x_min, y_max-y_min);
+}
+
 cv::Mat colorMap(const cv::Mat& img)
 {
     double min_val, max_val;
@@ -279,5 +350,6 @@ std::vector<float> estPrecision(const std::vector<FloatRect>& result, const std:
 
     return precision;
 }
+
 
 

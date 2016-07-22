@@ -3,7 +3,7 @@
 #include "mUtils.h"
 #include "ImageRep.h"
 
-static const int kMiniPatchRadius = 1;
+static const int kMiniPatchRadius = 3;
 
 PatchHsvGFeature::PatchHsvGFeature(const Config &conf) :
     mHsvFeature(), mGradFeature(),
@@ -194,6 +194,7 @@ void PatchHsvGFeature::UpdateFeatureVector(const Sample &s)
 
 void PatchHsvGFeature::UpdateWeightModel(const Sample &s)
 {
+
     const cv::Mat& hsvImg = s.getImage().GetColorImage();
     const int imgH = hsvImg.rows;
     const int imgW = hsvImg.cols;
@@ -214,13 +215,6 @@ void PatchHsvGFeature::UpdateWeightModel(const Sample &s)
     y_max = std::min(imgH, int(inner_rect.YMax()+30));
     outer_rect = IntRect(x_min, y_min, x_max-x_min, y_max-y_min);
 
-    cv::Mat binImg = cv::Mat::zeros(hsvImg.size(), CV_32SC1);
-    cv::Mat weightImg = cv::Mat::zeros(hsvImg.size(), CV_32FC1);
-    mHsvFeature.getBinImg(hsvImg, outer_rect, binImg);
-    mWeightModel.getProbImg(binImg, outer_rect, weightImg);
-    mWeightInteg = cv::Mat::zeros(imgH+1, imgW+1, CV_64FC1);
-    cv::integral(weightImg, mWeightInteg, CV_64F);
-
     std::vector<IntRect> patchImgRects;
     setPatchRect(cv::Size(inner_rect.Width(), inner_rect.Height()));
     for(int pid=0; pid<mPatchNumX*mPatchNumY; ++pid)
@@ -232,8 +226,23 @@ void PatchHsvGFeature::UpdateWeightModel(const Sample &s)
         patchImgRects.push_back(r);
     }
 
+    cv::Mat binImg = cv::Mat::zeros(hsvImg.size(), CV_32SC1);
+    cv::Mat weightImg = cv::Mat::zeros(hsvImg.size(), CV_32FC1);
+    mHsvFeature.getBinImg(hsvImg, outer_rect, binImg);
+
+
     // update the weight model
     mWeightModel.updateWProb(binImg, mPatchWeights, patchImgRects, bound_rect, outer_rect);
+
+
+    mWeightModel.getProbImg(binImg, outer_rect, weightImg);
+    mWeightInteg = cv::Mat::zeros(imgH+1, imgW+1, CV_64FC1);
+    cv::integral(weightImg, mWeightInteg, CV_64F);
+
+
+
+//    // update the weight model
+//    mWeightModel.updateWProb(binImg, mPatchWeights, patchImgRects, bound_rect, outer_rect);
 
     // update the patch weight
     Eigen::VectorXd patchWeights = Eigen::VectorXd::Zero(mPatchNumX*mPatchNumY);
@@ -244,7 +253,10 @@ void PatchHsvGFeature::UpdateWeightModel(const Sample &s)
                         + mWeightInteg.at<double>(r.YMax(), r.XMax())
                         - mWeightInteg.at<double>(r.YMax(), r.XMin())
                         - mWeightInteg.at<double>(r.YMin(), r.XMax()))/r.Area();
+
         patchWeights[pid] = weight;
+//       // test: map weight to 2^(weight)-1
+//        patchWeights[pid] = exp2(weight)-1;
     }
     double wmax = patchWeights.maxCoeff();
 

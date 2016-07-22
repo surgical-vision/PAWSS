@@ -19,7 +19,7 @@
 	typedef unsigned char UCHAR;
 #endif
 
-#include "GraphUtils.h"
+#include "GraphUtils/GraphUtils.h"
 
 #include <iostream>
 using namespace std;

@@ -12,16 +12,22 @@ saveFrame = 0
 
 # saveBoundingBox indicates whether saving the tracked bounding box file. 
 # If usingCamera, automatically set to 0.
-saveBoundingBox = 1
+saveBoundingBox = 0
 
 # if there exists ground truth for the sequence, savePrecisionFile indicates whether computing the precision rate for that sequence.
 # If usingCamera, automatically set to 0.
 savePrecisionFile = 1
 
 # base path for video sequences.
- sequenceBasePath = sequences
+# sequenceBasePath = /Users/xiaofeidu/mData/retinal_dataset
+ sequenceBasePath = /Users/xiaofeidu/mData/obt
 
 # video sequence to run the tracker on.
+
+ seqName = mountainbike
+# seqName = David3
+# seqName = Basketball
+
 
 #  0 - 9
 # seqName = Basketball
@@ -49,7 +55,7 @@ savePrecisionFile = 1
 # seqName = Football
 
 #  20 - 29
- seqName = Football1
+# seqName = Football1
 # seqName = Freeman1
 # seqName = Freeman3
 # seqName = Freeman4  
@@ -67,7 +73,7 @@ savePrecisionFile = 1
 # seqName = MotorRolling
 # seqName = MountainBike
 # seqName = Shaking
-# seqName = Singer1
+ seqName = Singer1
 # seqName = Singer2
 # seqName = Skating1
 # seqName = Skiing
@@ -86,8 +92,8 @@ savePrecisionFile = 1
 
 
 # patch number
-patchNumX = 7
-patchNumY = 7
+patchNumX = 8
+patchNumY = 8
 
 # seed for random number generator.
 seed = 0
@@ -100,7 +106,7 @@ svmBudgetSize = 100
 # image features to use.
 # format is: feature kernel [kernel-params]
 # where:
-#   feature = patchGrad/patchGrayGrad/patchRgb/patchRgbGrad/patchHsv/patchHsvGrad
+#   feature = patchGrad/patchGrayGrad/patchRgb/patchRgbGrad/patchHsv/patchHsvGrad/patchMotion/patchRgbMotion/patchHsvMotion
 #   kernel = linear/intersection
 #   for kernel=gaussian, kernel-params is sigma (not implemented…)
 

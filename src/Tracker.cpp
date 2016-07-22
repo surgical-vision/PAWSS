@@ -13,7 +13,12 @@
 #include "Features/PatchHsvGFeature.h"
 #include "Features/PatchRgbFeature.h"
 #include "Features/PatchRgbGFeature.h"
+#include "Features/PatchMotFeature.h"
+#include "Features/PatchRgbMFeature.h"
+#include "Features/PatchHsvMFeature.h"
 #include "scaleEstimator.h"
+#include "motModel.h"
+#include "pixelComp.h"
 
 static const int kGradualScaleNum = 9;
 static const int kAbruptScaleNum = 11;
@@ -22,7 +27,7 @@ static const double kUpdateSimilarity = 0.3;
 
 Tracker::Tracker(const Config& conf) :
     mConfig(conf),
-    mClassifier(0), mFeature(0), mKernel(0), mScaleEstimator(0),
+    mClassifier(0), mFeature(0), mKernel(0), mScaleEstimator(0), mMotEstimator(0), mPixelSim(0),
     mDebugImage(2*(int)conf.mSearchRadius+1, 2*(int)conf.mSearchRadius+1, CV_32FC1)
 {
     Reset();
@@ -37,6 +42,8 @@ void Tracker::Reset()
     if(mFeature) delete mFeature;
     if(mKernel) delete mKernel;
     if(mScaleEstimator) delete mScaleEstimator;
+    if(mMotEstimator) delete mMotEstimator;
+    if(mPixelSim) delete mPixelSim;
 
 
     mNeedColor = false;
@@ -81,6 +88,18 @@ void Tracker::Reset()
         mFeature = new PatchRgbGFeature(mConfig);
         mNeedColor = true;
         break;
+    case Config::kFeatureTypePatchMot:
+        mFeature = new PatchMotFeature(mConfig);
+        break;
+    case Config::kFeatureTypePatchRgbM:
+        mFeature = new PatchRgbMFeature(mConfig);
+        mNeedColor = true;
+        break;
+    case Config::kFeatureTypePatchHsvM:
+        mFeature = new PatchHsvMFeature(mConfig);
+        mNeedColor = true;
+        mNeedHsv = true;
+        break;
     default:
         break;
     }
@@ -103,6 +122,9 @@ void Tracker::Reset()
 
     mClassifier = new structuredSVM(mConfig, *mFeature, *mKernel);
     mScaleEstimator = new ScaleEstimator();
+    mMotEstimator = new motModel();
+    mPixelSim = new pixelSim();
+
 
 }
 
@@ -112,18 +134,20 @@ Tracker::~Tracker()
     delete mFeature;
     delete mKernel;
     delete mScaleEstimator;
+    delete mMotEstimator;
+    delete mPixelSim;
 
     mScales.clear();
 }
 
-void Tracker::Debug(const cv::Mat frame, const int frameIdx)
+void Tracker::Debug(const cv::Mat frame)
 {
     // show score image
     cv::imshow("tracker", mDebugImage);
     // show classifier debug image
     mClassifier->Debug();
     // show Weightimage
-    mFeature->showPatchWeightFrame(frame, frameIdx, mBb);
+    mFeature->showPatchWeightFrame(frame, mBb);
 }
 
 void Tracker::Initialise(const cv::Mat &frame, const FloatRect &bb)
@@ -132,12 +156,21 @@ void Tracker::Initialise(const cv::Mat &frame, const FloatRect &bb)
     mInitBb = FloatRect(bb);
     ImageRep image(frame, mNeedHsv, mNeedColor);
 
+    // initialize the previous image
+    mFeature->setPrevImg(image);
+//    mMotEstimator->setPrevImg(image);
+//    mMotEstimator->setTrueMotion(mBb);
+
+
     UpdateClassifier(image);
+    Sample s(image, mBb);
+    UpdateWeightModel(s);
 
     // initialize the scale estimator
     std::vector<cv::Point2f> pts;
     mFeature->extractPatchPts(mBb, 5, pts);
     mScaleEstimator->initialize(image.GetGrayImage(), pts);
+
 
     mInitialised = true;
 }
@@ -146,6 +179,10 @@ void Tracker::Initialise(const cv::Mat &frame, const FloatRect &bb)
 void Tracker::Track(const cv::Mat& frame)
 {
     assert(mInitialised);
+
+    // save the bounding box center
+    FloatRect prevBb = mBb;
+    cv::Vec2f prevBbCenter = cv::Vec2f(prevBb.XCentre(), prevBb.YCentre());
 
     ImageRep image(frame, mNeedHsv, mNeedColor);
     std::vector<FloatRect> keptRects;
@@ -240,6 +277,45 @@ void Tracker::Track(const cv::Mat& frame)
 #endif
     }
 
+    if(!mMotEstimator->hasSetPrevImg())
+    {
+        mMotEstimator->setPrevImg(image);
+        mMotEstimator->setTrueMotion(mBb);
+    }
+    else
+    {
+        // the motion estimator
+    //    cv::Mat flow;
+    //    mMotEstimator->evalMotion(image.GetGrayImage(), mBb, flow);
+        mMotEstimator->setTrueMotion(mBb);
+        mMotEstimator->evalMotionT(image.GetGrayImage());
+        cv::Mat motPropMap = cv::Mat(image.GetRect().Height(), image.GetRect().Width(), CV_32FC1);
+        // todo: the true motion is simplified here.
+    //    cv::Vec2f trueMot = cv::Vec2f(mBb.XCentre(), mBb.YCentre()) - prevBbCenter;
+        // be careful:
+        mMotEstimator->getValidMotionT(mBb, motPropMap);
+        // get the map 2times bigger
+        float zoom_fac = 2;
+        float x_min = fmax(0, mBb.XCentre() - zoom_fac * mBb.Width()/2);
+        float y_min = fmax(0, mBb.YCentre() - zoom_fac * mBb.Height()/2);
+        float x_max = fmin(image.GetRect().Width(), mBb.XCentre() + zoom_fac * mBb.Width()/2);
+        float y_max = fmin(image.GetRect().Height(), mBb.YCentre() + zoom_fac * mBb.Height()/2);
+        FloatRect biggerBB(x_min, y_min, x_max-x_min, y_max-y_min);
+        mMotEstimator->getValidMotionT(biggerBB, motPropMap);
+        // show the MotPropMap
+        mMotEstimator->showMotPropMap(motPropMap);
+
+        // test: show obj/back histogram
+        mMotEstimator->getHistogram(image.GetGrayImage(), prevBb);
+        mMotEstimator->setPrevImg(image);
+
+        // test: similarity
+        cv::Mat simMap = cv::Mat(image.GetRect().Height(), image.GetRect().Width(), CV_32FC1);
+        mPixelSim->evalSimMap(image.GetBaseImage(), mBb, simMap);
+        mPixelSim->showSimPropMap(simMap);
+    }
+
+
 }
 
 void Tracker::UpdateClassifier(const ImageRep &image)
@@ -314,7 +390,7 @@ void Tracker::genGradualScaleBBs(const ImageRep &img, const FloatRect &centre, s
         r.SetHeight(h * mScales[i]);
         r.SetXMin(xc - r.Width()/2);
         r.SetYMin(yc - r.Height()/2);
-        if(!r.IsInside(img.GetRect()) || r.Width() < mInitBb.Width() * 0.2 || r.Height() < mInitBb.Height() * 0.2)
+        if(!r.IsInside(img.GetRect()) || r.Width() < mInitBb.Width() * 0.1 || r.Height() < mInitBb.Height() * 0.1)
             continue;
         rects.push_back(r);
     }
@@ -333,7 +409,7 @@ void Tracker::genGradualScaleBBs(const ImageRep &img, const FloatRect &centre, s
                 r.SetHeight(h * mScales[i]);
                 r.SetXMin(xc + ix - r.Width()/2);
                 r.SetYMin(yc + iy - r.Height()/2);
-                if(!r.IsInside(img.GetRect()) || r.Width() < mInitBb.Width() * 0.2 || r.Height() < mInitBb.Height() * 0.2)
+                if(!r.IsInside(img.GetRect()) || r.Width() < mInitBb.Width() * 0.1 || r.Height() < mInitBb.Height() * 0.1)
                     continue;
                 rects.push_back(r);
             }

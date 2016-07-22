@@ -27,7 +27,7 @@ cv::Mat PatchFeature::getPatchWeightImg(const FloatRect& bb)
     return patchWeightColorImg;
 }
 
-void PatchFeature::showPatchWeightFrame(const cv::Mat& frame, const int frame_idx, const FloatRect& bb)
+void PatchFeature::showPatchWeightFrame(const cv::Mat& frame, const FloatRect& bb)
 {
     const cv::Mat& patchWeightFrame = getPatchWeightFrame(frame, bb);
     cv::imshow("patchWeightFrame", patchWeightFrame);

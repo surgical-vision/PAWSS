@@ -66,6 +66,9 @@ Config::Config(const std::string& path)
             else if (featureName == FeatureName(kFeatureTypePatchHsvG)) mFeatureKernelPair.mFeature = kFeatureTypePatchHsvG;
             else if (featureName == FeatureName(kFeatureTypePatchRgb)) mFeatureKernelPair.mFeature = kFeatureTypePatchRgb;
             else if (featureName == FeatureName(kFeatureTypePatchRgbG)) mFeatureKernelPair.mFeature = kFeatureTypePatchRgbG;
+            else if (featureName == FeatureName(kFeatureTypePatchMot)) mFeatureKernelPair.mFeature = kFeatureTypePatchMot;
+            else if (featureName == FeatureName(kFeatureTypePatchRgbM)) mFeatureKernelPair.mFeature = kFeatureTypePatchRgbM;
+            else if (featureName == FeatureName(kFeatureTypePatchHsvM)) mFeatureKernelPair.mFeature = kFeatureTypePatchHsvM;
             else
             {
                 std::cout << "error: unrecognised feature: "<< featureName << std::endl;
@@ -157,6 +160,12 @@ std::string Config::FeatureName(FeatureType f)
         return "patchHsv";
     case kFeatureTypePatchHsvG:
         return "patchHsvGrad";
+    case kFeatureTypePatchMot:
+        return "patchMotion";
+    case kFeatureTypePatchRgbM:
+        return "patchRgbMotion";
+    case kFeatureTypePatchHsvM:
+        return "patchHsvMotion";
     default:
         return "";
     }

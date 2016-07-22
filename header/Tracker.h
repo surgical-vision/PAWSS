@@ -11,6 +11,8 @@ class Kernel;
 class structuredSVM;
 class Sample;
 class ScaleEstimator;
+class motModel;
+class pixelSim;
 
 
 class Tracker
@@ -21,7 +23,7 @@ public:
 
     void Initialise(const cv::Mat& frame, const FloatRect& bb);
     void Reset();
-    void Debug(const cv::Mat frame, const int frameIdx);
+    void Debug(const cv::Mat frame);
     void Track(const cv::Mat &frame);
     void UpdateClassifier(const ImageRep& image);
     void UpdateWeightModel(const Sample& s);
@@ -54,6 +56,9 @@ private:
     float mScale;
     std::vector<float> mScales;
     ScaleEstimator* mScaleEstimator;
+
+    motModel* mMotEstimator;
+    pixelSim* mPixelSim;
 
 };
 

@@ -23,6 +23,8 @@ private:
     std::vector<cv::Mat> mIntegs;
     cv::Mat mWeightInteg;
 
+    bool mPatchWeightInitialized;
+
 };
 
 #endif

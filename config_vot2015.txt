@@ -1,0 +1,122 @@
+# quiet mode disables all visual output (for experiments).
+quietMode =0
+
+# debug mode enables additional drawing and visualisation.
+debugMode = 1
+
+# useCamera enables webcam
+useCamera = 0
+
+# saveFrame indicates whether saving the tracked frame image
+saveFrame = 1
+
+# saveBoundingBox indicates whether saving the tracked bounding box file. 
+# If usingCamera, automatically set to 0.
+saveBoundingBox = 1
+
+# if there exists ground truth for the sequence, savePrecisionFile indicates whether computing the precision rate for that sequence.
+# If usingCamera, automatically set to 0.
+savePrecisionFile = 1
+
+# base path for video sequences.
+sequenceBasePath = /Users/xiaofeidu/mData/vot2015
+# sequenceBasePath = sequences
+
+# video sequence to run the tracker on.
+
+#  0 - 9
+seqName = bag
+seqName = ball1
+seqName = ball2
+seqName = basketball
+seqName = birds1
+seqName = birds2
+seqName = blanket
+seqName = bmx
+seqName = bolt1
+seqName = bolt2
+
+#  10 - 19
+seqName = book
+seqName = butterfly
+seqName = car1
+seqName = car2
+seqName = crossing
+seqName = dinosaur
+seqName = fernando
+seqName = fish1
+seqName = fish2
+seqName = fish3
+
+#  20 - 29
+seqName = fish4
+seqName = girl
+seqName = glove
+seqName = godfather
+seqName = graduate
+seqName = gymnastics1
+seqName = gymnastics2
+seqName = gymnastics3
+seqName = gymnastics4
+seqName = hand
+
+#  30 - 39
+seqName = handball1
+seqName = handball2
+seqName = helicopter
+seqName = iceskater1
+seqName = iceskater2
+seqName = leaves
+seqName = marching
+seqName = matrix
+seqName = motocross1
+seqName = motocross2
+
+#  40 - 49
+seqName = nature
+seqName = octopus
+seqName = pedestrian1
+seqName = pedestrian2
+seqName = rabbit
+seqName = racing
+seqName = road
+seqName = shaking
+seqName = sheep
+seqName = singer1
+
+#  50 - 59
+seqName = singer2
+seqName = singer3
+seqName = soccer1
+seqName = soccer2
+seqName = soldier
+seqName = sphere
+seqName = tiger
+seqName = traffic
+seqName = tunnel
+seqName = wiper
+
+
+# patch number
+patchNumX = 7
+patchNumY = 7
+
+# seed for random number generator.
+seed = 0
+
+# SVM regularization parameter.
+svmC = 100.0
+# SVM budget size (0 = no budget).
+svmBudgetSize = 100
+
+# image features to use.
+# format is: feature kernel [kernel-params]
+# where:
+#   feature = patchGrad/patchGrayGrad/patchRgb/patchRgbGrad/patchHsv/patchHsvGrad
+#   kernel = linear/intersection
+#   for kernel=gaussian, kernel-params is sigma (not implemented…)
+
+feature = patchHsvGrad linear
+
+# Tracker scale type: one/gradual/all
+scaleType = all

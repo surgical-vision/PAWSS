@@ -18,6 +18,8 @@ void deinterlace(cv::Mat& m);
 float mod(float a, float b);
 float RandomFloat(float a, float b);
 void getUnionRect(const std::vector<FloatRect> &rects, FloatRect& union_r);
+void Polygon2Rect(const std::vector<float>& pts, FloatRect& rect);
+FloatRect Polygon2Rect(const std::vector<float> &pts);
 cv::Mat colorMap(const cv::Mat& img);
 
 bool readFramesFile(const std::string& filePath, int& startFrame, int& endFrame);

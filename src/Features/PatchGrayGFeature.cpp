@@ -3,7 +3,7 @@
 #include "ImageRep.h"
 #include "Sample.h"
 
-static const int kMiniPatchRadius = 1;
+static const int kMiniPatchRadius = 3;
 
 PatchGrayGFeature::PatchGrayGFeature(const Config &conf) :
     mGrayFeature(), mGradFeature(), mWeightModel(mGrayFeature.GetCount())

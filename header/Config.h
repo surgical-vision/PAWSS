@@ -27,7 +27,10 @@ public:
         kFeatureTypePatchGrad,
         kFeatureTypePatchGrayG,
         kFeatureTypePatchRgbG,
-        kFeatureTypePatchHsvG
+        kFeatureTypePatchHsvG,
+        kFeatureTypePatchMot,
+        kFeatureTypePatchRgbM,
+        kFeatureTypePatchHsvM
     };
 
     enum kernelType

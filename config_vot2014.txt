@@ -1,0 +1,83 @@
+# quiet mode disables all visual output (for experiments).
+quietMode = 1
+
+# debug mode enables additional drawing and visualisation.
+debugMode = 0
+
+# useCamera enables webcam
+useCamera = 0
+
+# saveFrame indicates whether saving the tracked frame image
+saveFrame = 0
+
+# saveBoundingBox indicates whether saving the tracked bounding box file. 
+# If usingCamera, automatically set to 0.
+saveBoundingBox = 0
+
+# if there exists ground truth for the sequence, savePrecisionFile indicates whether computing the precision rate for that sequence.
+# If usingCamera, automatically set to 0.
+savePrecisionFile = 0
+
+# base path for video sequences.
+sequenceBasePath = /Users/xiaofeidu/mData/vot2014
+# sequenceBasePath = sequences
+
+# video sequence to run the tracker on.
+
+#  0 - 9
+ seqName = ball
+# seqName = basketball
+# seqName = bicycle
+ seqName = bolt
+# seqName = car
+# seqName = david
+# seqName = diving
+# seqName = drunk
+ seqName = fernando
+ seqName = fish1
+
+
+#  10 - 19
+ seqName = fish2
+# seqName = gymnastics
+# seqName = hand1
+ seqName = hand2
+# seqName = jogging
+ seqName = motocross
+# seqName = polarbear
+# seqName = skating
+# seqName = sphere
+# seqName = sunshade
+
+
+#  20 - 24
+# seqName = surfing
+# seqName = torus
+# seqName = trellis
+# seqName = tunnel
+# seqName = woman
+
+
+# patch number
+patchNumX = 8
+patchNumY = 8
+
+# seed for random number generator.
+seed = 0
+
+# SVM regularization parameter.
+svmC = 100.0
+# SVM budget size (0 = no budget).
+svmBudgetSize = 100
+
+# image features to use.
+# format is: feature kernel [kernel-params]
+# where:
+#   feature = patchGrad/patchGrayGrad/patchRgb/patchRgbGrad/patchHsv/patchHsvGrad
+#   kernel = linear/intersection
+#   for kernel=gaussian, kernel-params is sigma (not implemented…)
+
+feature = patchRgbGrad linear
+
+# Tracker scale type: one/gradual/all
+scaleType = all
