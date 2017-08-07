@@ -5,7 +5,7 @@ quietMode =0
 debugMode = 1
 
 # useCamera enables webcam
-useCamera = 0
+useCamera = 1
 
 # saveFrame indicates whether saving the tracked frame image
 saveFrame = 0
