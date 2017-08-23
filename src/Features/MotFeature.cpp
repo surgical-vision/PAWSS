@@ -1,6 +1,7 @@
 #include <assert.h>
-#include "Features/MotFeature.h"
-#include "mUtils.h"
+#include <PAWSS/Features/MotFeature.h>
+#include <PAWSS/mUtils.h>
+#include <PAWSS/macros.h>
 
 
 static const int kNumBin = 16;
@@ -21,6 +22,7 @@ int MotFeature::compBinIdx(const float orientation) const
 void MotFeature::compMotion(const cv::Mat &prev, const cv::Mat &curr, const IntRect &rect, cv::Mat &orientation, cv::Mat &mag) const
 {
     // get the image ready
+    PAWSS_UNUSED(rect);
     assert(prev.channels() == 1 || prev.channels() == 3 || curr.channels() == 1 || curr.channels() == 3);
     cv::Mat grayPrev, grayCurr;
     if(prev.channels() == 3)

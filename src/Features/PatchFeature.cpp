@@ -1,6 +1,6 @@
-#include "Features/PatchFeature.h"
-#include "Sample.h"
-#include "mUtils.h"
+#include <PAWSS/Features/PatchFeature.h>
+#include <PAWSS/Sample.h>
+#include <PAWSS/mUtils.h>
 
 void PatchFeature::Eval(const multiSample &samples, std::vector<Eigen::VectorXd> &featVecs)
 {
@@ -31,14 +31,20 @@ void PatchFeature::showPatchWeightFrame(const cv::Mat& frame, const FloatRect& b
 {
     const cv::Mat& patchWeightFrame = getPatchWeightFrame(frame, bb);
     cv::imshow("patchWeightFrame", patchWeightFrame);
-    // todo: save
 }
 
-void PatchFeature::showPatchWeightImg(const int frame_idx, const FloatRect &bb)
+void PatchFeature::showPatchWeightImg(const FloatRect &bb)
 {
     const cv::Mat& patchWeightImg = getPatchWeightImg(bb);
     cv::imshow("patchWeightImage", patchWeightImg);
-    // todo: save
+}
+
+void PatchFeature::showWeightImg(const cv::Mat &frame, const FloatRect &bb)
+{
+    const cv::Mat& weightImg = getWeightImg(frame, bb);
+    // colour the weight image
+    cv::Mat weightColorImg = colorMap(weightImg);
+    cv::imshow("weightImage", weightColorImg);
 }
 
 cv::Mat PatchFeature::getPatchWeightFrame(const cv::Mat &frame, const FloatRect &bb)
@@ -61,7 +67,7 @@ void PatchFeature::extractPatchPts(const FloatRect &bb, const int ptNumPerPatch,
     setPatchRect(cv::Size(bb.Width(), bb.Height()));
     pts.clear();
 
-    for(int i=0; i<mPatchRects.size(); ++i)
+    for(size_t i=0; i<mPatchRects.size(); ++i)
     {
         IntRect r = mPatchRects[i];
         // add offset

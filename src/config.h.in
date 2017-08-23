@@ -1,0 +1,38 @@
+#ifndef @PROJECT_NAME_CAP@_CONFIG_H
+#define @PROJECT_NAME_CAP@_CONFIG_H
+
+/*
+ * Configuration Header for meshTrack
+ */
+
+/// Version
+#define @PROJECT_NAME_CAP@_VERSION_MAJOR ${${PROJECT_NAME_CAP}_VERSION_MAJOR}
+#define @PROJECT_NAME_CAP@_VERSION_MINOR ${${PROJECT_NAME_CAP}_VERSION_MINOR}
+#define @PROJECT_NAME_CAP@_VERSION_STRING "${${PROJECT_NAME_CAP}_VERSION}"
+
+/// SneakyPanda options
+#cmakedefine BUILD_VIDEO
+
+/// Configured libraries
+#cmakedefine HAVE_OPENCV
+#cmakedefine HAVE_BOOST
+
+
+/// Platform
+#cmakedefine _UNIX_
+#cmakedefine _WIN_
+#cmakedefine _OSX_
+#cmakedefine _LINUX_
+#cmakedefine _ANDROID_
+#cmakedefine _IOS_
+
+/// Compiler
+#cmakedefine _GCC_
+#cmakedefine _CLANG_
+#cmakedefine _MSVC_
+
+#if (__cplusplus > 199711L) || (_MSC_VER >= 1800)
+#define CALLEE_HAS_VARIADIC_TEMPLATES
+#endif
+
+#endif

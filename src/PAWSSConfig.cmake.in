@@ -1,0 +1,15 @@
+# Compute paths
+get_filename_component( PROJECT_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH )
+set( @PROJECT_NAME_CAP@_INCLUDE_DIRS "@EXPORT_LIB_INC_DIR@;@USER_INC@" )
+set( @PROJECT_NAME_CAP@_INCLUDE_DIR  "@EXPORT_LIB_INC_DIR@;@USER_INC@" )
+
+# Library dependencies (contains definitions for IMPORTED targets)
+if( NOT TARGET @LIBRARY_NAME@ AND NOT @PROJECT_NAME@_BINARY_DIR )
+  # include( "@PROJECT_CMAKE_DIR@/@CMAKE_PROJECT_NAME@Targets.cmake" )
+  include( "${PROJECT_CMAKE_DIR}/@CMAKE_PROJECT_NAME@Targets.cmake" )
+  @ExternConfig@
+endif()
+
+set( @PROJECT_NAME_CAP@_LIBRARIES    @LIBRARY_NAME@ )
+set( @PROJECT_NAME_CAP@_LIBRARY      @LIBRARY_NAME@ )
+set( @PROJECT_NAME_CAP@_CMAKEMODULES @CMAKE_CURRENT_SOURCE_DIR@/../CMakeModules )

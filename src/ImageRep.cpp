@@ -1,8 +1,8 @@
-#include "ImageRep.h"
+#include <PAWSS/ImageRep.h>
 
 ImageRep::ImageRep(const cv::Mat &image, bool hsv_flag, bool color) :
-    mRect(0, 0, image.cols, image.rows),
-    mChannels(color ? 3:1)
+    mChannels(color ? 3:1),
+    mRect(0, 0, image.cols, image.rows)
 {
     mBaseImg = image;
     if(color)

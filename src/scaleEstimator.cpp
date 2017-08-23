@@ -1,5 +1,5 @@
-#include "scaleEstimator.h"
-#include "mUtils.h"
+#include <PAWSS/scaleEstimator.h>
+#include <PAWSS/mUtils.h>
 
 
 ScaleEstimator::~ScaleEstimator()
@@ -29,7 +29,7 @@ float ScaleEstimator::estimateScale(const cv::Mat &currImg)
     trackPts(currImg);
 
     int trackedNum = 0;
-    for(int i=0; i<mStatus.size(); ++i) {
+    for(size_t i=0; i<mStatus.size(); ++i) {
         if(mStatus[i] != 0) {
             trackedNum++; } }
     if(float(trackedNum)/mStatus.size() < 0.5)
@@ -37,12 +37,12 @@ float ScaleEstimator::estimateScale(const cv::Mat &currImg)
 
     float prevDist, currDist, ratio;
     std::vector<float> pairRatios;
-    for(int i=0; i<mStatus.size(); ++i)
+    for(size_t i=0; i<mStatus.size(); ++i)
     {
         if(mStatus[i] == 0)
             continue;
 
-        for(int j=i+1; j<mStatus.size(); ++j)
+        for(size_t j=i+1; j<mStatus.size(); ++j)
         {
             if(mStatus[j] == 0)
                 continue;

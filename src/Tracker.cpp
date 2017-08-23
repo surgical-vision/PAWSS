@@ -1,24 +1,24 @@
-#include "Tracker.h"
-#include "mUtils.h"
-#include "Sample.h"
-#include "Kernels.h"
-#include "Features/Feature.h"
-#include "structuredSVM.h"
-#include "Config.h"
-#include "ImageRep.h"
-#include "Features/PatchGradFeature.h"
-#include "Features/PatchGrayFeature.h"
-#include "Features/PatchGrayGFeature.h"
-#include "Features/PatchHsvFeature.h"
-#include "Features/PatchHsvGFeature.h"
-#include "Features/PatchRgbFeature.h"
-#include "Features/PatchRgbGFeature.h"
-#include "Features/PatchMotFeature.h"
-#include "Features/PatchRgbMFeature.h"
-#include "Features/PatchHsvMFeature.h"
-#include "scaleEstimator.h"
-#include "motModel.h"
-#include "pixelComp.h"
+#include <PAWSS/Tracker.h>
+#include <PAWSS/mUtils.h>
+#include <PAWSS/Sample.h>
+#include <PAWSS/Kernels.h>
+#include <PAWSS/Features/Feature.h>
+#include <PAWSS/structuredSVM.h>
+#include <PAWSS/Config.h>
+#include <PAWSS/ImageRep.h>
+#include <PAWSS/Features/PatchGradFeature.h>
+#include <PAWSS/Features/PatchGrayFeature.h>
+#include <PAWSS/Features/PatchGrayGFeature.h>
+#include <PAWSS/Features/PatchHsvFeature.h>
+#include <PAWSS/Features/PatchHsvGFeature.h>
+#include <PAWSS/Features/PatchRgbFeature.h>
+#include <PAWSS/Features/PatchRgbGFeature.h>
+#include <PAWSS/Features/PatchMotFeature.h>
+#include <PAWSS/Features/PatchRgbMFeature.h>
+#include <PAWSS/Features/PatchHsvMFeature.h>
+#include <PAWSS/scaleEstimator.h>
+#include <PAWSS/motModel.h>
+#include <PAWSS/pixelComp.h>
 
 static const int kGradualScaleNum = 9;
 static const int kAbruptScaleNum = 11;
@@ -27,8 +27,10 @@ static const double kUpdateSimilarity = 0.3;
 
 Tracker::Tracker(const Config& conf) :
     mConfig(conf),
-    mClassifier(0), mFeature(0), mKernel(0), mScaleEstimator(0), mMotEstimator(0), mPixelSim(0),
-    mDebugImage(2*(int)conf.mSearchRadius+1, 2*(int)conf.mSearchRadius+1, CV_32FC1)
+    mClassifier(0), mFeature(0),
+    mKernel(0), mScaleEstimator(0),
+    mDebugImage(2*(int)conf.mSearchRadius+1, 2*(int)conf.mSearchRadius+1, CV_32FC1),
+    mMotEstimator(0), mPixelSim(0)
 {
     Reset();
 }
@@ -148,6 +150,9 @@ void Tracker::Debug(const cv::Mat frame)
     mClassifier->Debug();
     // show Weightimage
     mFeature->showPatchWeightFrame(frame, mBb);
+    // show segmentation image
+    mFeature->showWeightImg(frame, mBb);
+
 }
 
 void Tracker::Initialise(const cv::Mat &frame, const FloatRect &bb)
@@ -181,8 +186,8 @@ void Tracker::Track(const cv::Mat& frame)
     assert(mInitialised);
 
     // save the bounding box center
-    FloatRect prevBb = mBb;
-    cv::Vec2f prevBbCenter = cv::Vec2f(prevBb.XCentre(), prevBb.YCentre());
+//    FloatRect prevBb = mBb;
+//    cv::Vec2f prevBbCenter = cv::Vec2f(prevBb.XCentre(), prevBb.YCentre());
 
     ImageRep image(frame, mNeedHsv, mNeedColor);
     std::vector<FloatRect> keptRects;
@@ -303,16 +308,16 @@ void Tracker::Track(const cv::Mat& frame)
         FloatRect biggerBB(x_min, y_min, x_max-x_min, y_max-y_min);
         mMotEstimator->getValidMotionT(biggerBB, motPropMap);
         // show the MotPropMap
-        mMotEstimator->showMotPropMap(motPropMap);
+//        mMotEstimator->showMotPropMap(motPropMap);
 
         // test: show obj/back histogram
-        mMotEstimator->getHistogram(image.GetGrayImage(), prevBb);
+//        mMotEstimator->getHistogram(image.GetGrayImage(), prevBb);
         mMotEstimator->setPrevImg(image);
 
         // test: similarity
         cv::Mat simMap = cv::Mat(image.GetRect().Height(), image.GetRect().Width(), CV_32FC1);
         mPixelSim->evalSimMap(image.GetBaseImage(), mBb, simMap);
-        mPixelSim->showSimPropMap(simMap);
+//        mPixelSim->showSimPropMap(simMap);
     }
 
 
@@ -384,7 +389,7 @@ void Tracker::genGradualScaleBBs(const ImageRep &img, const FloatRect &centre, s
     float yc = centre.YCentre();
 
     FloatRect r;
-    for(int i = 0; i< mScales.size(); ++i)
+    for(size_t i = 0; i< mScales.size(); ++i)
     {
         r.SetWidth(w * mScales[i]);
         r.SetHeight(h * mScales[i]);
@@ -403,7 +408,7 @@ void Tracker::genGradualScaleBBs(const ImageRep &img, const FloatRect &centre, s
         {
             if(ix*ix+iy*iy > r2) continue;
             if(ix==0 && iy==0) continue;
-            for(int i=0; i<mScales.size(); ++i)
+            for(size_t i=0; i<mScales.size(); ++i)
             {
                 r.SetWidth(w * mScales[i]);
                 r.SetHeight(h * mScales[i]);

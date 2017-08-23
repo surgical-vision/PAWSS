@@ -1,5 +1,6 @@
 #include <numeric>
-#include "motModel.h"
+#include <PAWSS/motModel.h>
+#include <PAWSS/macros.h>
 
 
 
@@ -23,6 +24,7 @@ void motModel::showMotPropMap(const cv::Mat &propMap)
 
 void motModel::evalMotion(const cv::Mat &curr, const IntRect &rect, cv::Mat &flow)
 {
+        PAWSS_UNUSED(rect);
         // get the image ready
         assert(mPrevImg.channels() == 1 || mPrevImg.channels() == 3 || curr.channels() == 1 || curr.channels() == 3);
         cv::Mat grayPrev, grayCurr;
@@ -386,7 +388,7 @@ void motModel::getValidMotionT(const IntRect& rect, cv::Mat &propMap)
 
     // the object motion (reversed)
     std::vector<float> trueDists;
-    for(int i=0; i<mTrueMots.size(); ++i)
+    for(size_t i=0; i<mTrueMots.size(); ++i)
     {
         trueDists.push_back(sqrt(pow(mTrueMots[i].x, 2) + pow(mTrueMots[i].y, 2)));
     }

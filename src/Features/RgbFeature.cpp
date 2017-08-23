@@ -1,4 +1,4 @@
-#include "Features/RgbFeature.h"
+#include <PAWSS/Features/RgbFeature.h>
 
 static const int kRbinNum = 8;
 static const int kGbinNum = 8;

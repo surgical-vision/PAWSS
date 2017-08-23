@@ -1,5 +1,5 @@
-#include "Features/Feature.h"
-#include "Sample.h"
+#include <PAWSS/Features/Feature.h>
+#include <PAWSS/Sample.h>
 
 
 Feature::Feature() :

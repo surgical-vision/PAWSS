@@ -1,19 +1,19 @@
 #include <opencv2/highgui.hpp>
-#include "structuredSVM.h"
-#include "Config.h"
-#include "Kernels.h"
-#include "Features/PatchFeature.h"
-#include "Sample.h"
-#include "ImageRep.h"
-#include "GraphUtils/GraphUtils.h"
+#include <PAWSS/structuredSVM.h>
+#include <PAWSS/Config.h>
+#include <PAWSS/Kernels.h>
+#include <PAWSS/Features/PatchFeature.h>
+#include <PAWSS/Sample.h>
+#include <PAWSS/ImageRep.h>
+#include <PAWSS/GraphUtils/GraphUtils.h>
 
 static const int kTileSize = 30;
 static const int kMaxSVs =  2000;  // TODO (only used when no budget)
 
 structuredSVM::structuredSVM(const Config &conf, const Feature& feature, const Kernel &kernel) :
+    mC(conf.mSvmC),
     mConfig(conf),
-    mKernel(kernel),
-    mC(conf.mSvmC)
+    mKernel(kernel)
 {
     int N = conf.mSvmBudgetSize > 0 ? conf.mSvmBudgetSize+2 : kMaxSVs;
     mK = Eigen::MatrixXd::Zero(N, N);
@@ -32,7 +32,7 @@ void structuredSVM::Update(const multiSample &samples, const std::vector<Eigen::
     SupportPattern* sp = new SupportPattern;
     const std::vector<FloatRect>& rects = samples.getRects();
     FloatRect centre = rects[y];
-    for(int i=0; i<rects.size(); ++i)
+    for(size_t i=0; i<rects.size(); ++i)
     {
         // express r in coord frame of centre sample
         FloatRect r = rects[i];
@@ -68,7 +68,7 @@ void structuredSVM::Update(const multiSample &samples, const std::vector<Eigen::
 
     // update decision boundary
     mW.setZero();
-    for(int i=0; i<mSvs.size(); ++i)
+    for(size_t i=0; i<mSvs.size(); ++i)
     {
         const SupportVector& sv = *mSvs[i];
         mW += sv.b * sv.x->x[sv.y];
@@ -107,7 +107,7 @@ double structuredSVM::EvalTrueSample(const Eigen::VectorXd &tfv) const
     double sim = 0.0;
     int numPsv = 0;
 //    const Eigen::VectorXd tfv = const_cast<Feature&>(mFeature).Eval(s);
-    for(int i=0; i<mSvs.size(); ++i)
+    for(size_t i=0; i<mSvs.size(); ++i)
     {
         const SupportVector& sv = *mSvs[i];
         if(sv.b > 0)

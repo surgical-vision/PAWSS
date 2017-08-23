@@ -24,7 +24,7 @@ savePrecisionFile = 1
 
 # video sequence to run the tracker on.
 
- seqName = mountainbike
+# seqName = mountainbike
 # seqName = David3
 # seqName = Basketball
 
@@ -36,7 +36,7 @@ savePrecisionFile = 1
 # seqName = CarDark
 # seqName = Car4
 # seqName = CarScale
-# seqName = Coke
+ seqName = Coke
 # seqName = Couple
 # seqName = Crossing
 # seqName = David
@@ -92,8 +92,8 @@ savePrecisionFile = 1
 
 
 # patch number
-patchNumX = 8
-patchNumY = 8
+patchNumX = 6
+patchNumY = 6
 
 # seed for random number generator.
 seed = 0
@@ -109,8 +109,8 @@ svmBudgetSize = 100
 #   feature = patchGrad/patchGrayGrad/patchRgb/patchRgbGrad/patchHsv/patchHsvGrad/patchMotion/patchRgbMotion/patchHsvMotion
 #   kernel = linear/intersection
 #   for kernel=gaussian, kernel-params is sigma (not implemented…)
-
-feature = patchHsvGrad linear
+#
+feature = patchRgbGrad linear
 
 # Tracker scale type: one/gradual/all
 scaleType = all

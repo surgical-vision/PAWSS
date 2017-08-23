@@ -1,9 +1,9 @@
-#include "Features/PatchMotFeature.h"
-#include "Sample.h"
-#include "mUtils.h"
-#include "ImageRep.h"
+#include <PAWSS/Features/PatchMotFeature.h>
+#include <PAWSS/mUtils.h>
+#include <PAWSS/ImageRep.h>
+#include <PAWSS/Sample.h>
 
-static const int kMiniPatchRadius = 1;
+//static const int kMiniPatchRadius = 1;
 
 PatchMotFeature::PatchMotFeature(const Config &conf) :
     mMotFeature()
@@ -25,6 +25,7 @@ PatchMotFeature::PatchMotFeature(const Config &conf) :
 void PatchMotFeature::UpdateWeightModel(const Sample &s)
 {
     // todo
+    PAWSS_UNUSED(s);
 }
 
 void PatchMotFeature::setPrevImg(ImageRep &img)
@@ -128,5 +129,4 @@ void PatchMotFeature::UpdateFeatureVector(const Sample &s)
         if(fea_sum != 0) {
             mFeatVec /= fea_sum;}}
 
-    int foo = 1;
 }

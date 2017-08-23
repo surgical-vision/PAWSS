@@ -1,7 +1,7 @@
 #include <math.h>
 #include <assert.h>
-#include "Features/GradFeature.h"
-#include "mUtils.h"
+#include <PAWSS/Features/GradFeature.h>
+#include <PAWSS/mUtils.h>
 
 static const int kNumGrad = 16;
 static bool kUnsigned = false;

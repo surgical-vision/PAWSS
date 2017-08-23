@@ -1,7 +1,7 @@
-#include "Features/PatchRgbGFeature.h"
-#include "mUtils.h"
-#include "ImageRep.h"
-#include "Sample.h"
+#include <PAWSS/Features/PatchRgbGFeature.h>
+#include <PAWSS/mUtils.h>
+#include <PAWSS/ImageRep.h>
+#include <PAWSS/Sample.h>
 
 static const int kMiniPatchRadius = 1;
 
@@ -63,7 +63,7 @@ void PatchRgbGFeature::PrepEval(const multiSample &samples)
     rgbIndice idx;
     int rBinNum = mRgbFeature.GetRbinNum();
     int gBinNum = mRgbFeature.GetGbinNum();
-    int bBinNum = mRgbFeature.GetBbinNum();
+//    int bBinNum = mRgbFeature.GetBbinNum();
     for(int iy=unionRect.YMin(); iy<unionRect.YMax(); ++iy)
     {
         p = imgColor.ptr<uchar>(iy);
@@ -122,7 +122,7 @@ void PatchRgbGFeature::PrepEval(const multiSample &samples)
         cv::integral(hists[i+mRgbBinNum], mIntegs[i+mRgbBinNum], CV_32F);
 
 
-    for(int i=0; i<hists.size(); ++i)
+    for(size_t i=0; i<hists.size(); ++i)
         hists[i].release();
     hists.clear();
 
@@ -335,4 +335,25 @@ void PatchRgbGFeature::UpdateWeightModel(const Sample &s)
 }
 
 
+cv::Mat PatchRgbGFeature::getWeightImg(const cv::Mat &frame, const FloatRect &bb)
+{
+    const cv::Mat& rgbImg = frame;
+    const int imgH = rgbImg.rows;
+    const int imgW = rgbImg.cols;
 
+    IntRect outer_rect;
+    float x_min, x_max, y_min, y_max;
+    x_min = std::max(0, int(bb.XMin()-30));
+    y_min = std::max(0, int(bb.YMin()-30));
+    x_max = std::min(imgW, int(bb.XMax()+30));
+    y_max = std::min(imgH, int(bb.YMax()+30));
+    outer_rect = IntRect(x_min, y_min, x_max-x_min, y_max-y_min);
+
+    cv::Mat binImg = cv::Mat::zeros(rgbImg.size(), CV_32SC1);
+    cv::Mat weightImg = cv::Mat::zeros(rgbImg.size(), CV_32FC1);
+    mRgbFeature.getBinImg(rgbImg, outer_rect, binImg);
+    mWeightModel.getProbImg(binImg, outer_rect, weightImg);
+
+    return weightImg;
+
+}

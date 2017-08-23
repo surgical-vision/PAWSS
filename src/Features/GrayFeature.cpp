@@ -1,4 +1,4 @@
-#include "Features/GrayFeature.h"
+#include <PAWSS/Features/GrayFeature.h>
 
 static const int kBinNum = 8;
 

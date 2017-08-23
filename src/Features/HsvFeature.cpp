@@ -1,4 +1,4 @@
-#include "Features/HsvFeature.h"
+#include <PAWSS/Features/HsvFeature.h>
 
 static const int kHbinNum = 8;
 static const int kSbinNum = 8;

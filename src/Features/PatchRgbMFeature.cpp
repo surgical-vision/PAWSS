@@ -1,7 +1,7 @@
-#include "Features/PatchRgbMFeature.h"
-#include "mUtils.h"
-#include "ImageRep.h"
-#include "Sample.h"
+#include <PAWSS/Features/PatchRgbMFeature.h>
+#include <PAWSS/mUtils.h>
+#include <PAWSS/ImageRep.h>
+#include <PAWSS/Sample.h>
 
 static const int kMiniPatchRadius = 1;
 
@@ -115,7 +115,7 @@ void PatchRgbMFeature::PrepEval(const multiSample &samples)
         cv::integral(hists[i+mRgbBinNum], mIntegs[i+mRgbBinNum], CV_32F);
 
 
-    for(int i=0; i<hists.size(); ++i)
+    for(size_t i=0; i<hists.size(); ++i)
         hists[i].release();
     hists.clear();
 

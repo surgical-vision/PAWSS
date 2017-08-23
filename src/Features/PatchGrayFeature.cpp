@@ -1,7 +1,7 @@
-#include "Features/PatchGrayFeature.h"
-#include "Sample.h"
-#include "mUtils.h"
-#include "ImageRep.h"
+#include <PAWSS/Features/PatchGrayFeature.h>
+#include <PAWSS/mUtils.h>
+#include <PAWSS/ImageRep.h>
+#include <PAWSS/Sample.h>
 
 static const int kMiniPatchRadius = 1;
 
@@ -51,7 +51,7 @@ void PatchGrayFeature::PrepEval(const multiSample &samples)
 
     // compute gray bin index map
     const uchar *p;
-    double *wp;
+//    double *wp;
     int idx;
     for(int iy=unionRect.YMin(); iy<unionRect.YMax(); ++iy)
     {
@@ -84,7 +84,7 @@ void PatchGrayFeature::PrepEval(const multiSample &samples)
         cv::integral(hists[i], mIntegs[i], CV_32F);
 //    cv::integral(weight_map, mWeightInteg, CV_64F);
 
-    for(int i=0; i<hists.size(); ++i)
+    for(size_t i=0; i<hists.size(); ++i)
         hists[i].release();
     hists.clear();
 

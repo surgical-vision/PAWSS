@@ -1,5 +1,5 @@
 #include <numeric>
-#include "segModel.h"
+#include <PAWSS/segModel.h>
 
 static const float kProb_c10 = 0.4;
 static const float kProb_c11 = 0.6;
@@ -34,14 +34,14 @@ void segModel::updateWProb(const cv::Mat& bin_map, const Eigen::VectorXd &weight
     std::vector<double> pixelnum_c0(mNumBin, 0);
     std::vector<double> pixelnum_c1(mNumBin, 0);
 
-    assert(weights.size() == patch_rects.size());
+    assert((size_t)weights.size() == patch_rects.size());
     const int *hp;
     int hsv_bin_idx;
 
     // foreground
     IntRect rect;
     float weight;
-    for(int id=0; id<patch_rects.size(); ++id)
+    for(size_t id=0; id<patch_rects.size(); ++id)
     {
         rect = patch_rects[id];
         weight = weights[id];

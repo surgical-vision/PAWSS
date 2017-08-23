@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "Config.h"
+#include <PAWSS/Config.h>
 
 Config::Config(const std::string& path)
 {

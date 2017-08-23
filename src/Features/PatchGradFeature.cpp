@@ -1,9 +1,9 @@
-#include "Features/PatchGradFeature.h"
-#include "Sample.h"
-#include "mUtils.h"
-#include "ImageRep.h"
+#include <PAWSS/Features/PatchGradFeature.h>
+#include <PAWSS/Sample.h>
+#include <PAWSS/mUtils.h>
+#include <PAWSS/ImageRep.h>
 
-static const int kMiniPatchRadius = 1;
+//static const int kMiniPatchRadius = 1;
 
 PatchGradFeature::PatchGradFeature(const Config &conf) :
     mGradFeature()
@@ -70,7 +70,7 @@ void PatchGradFeature::PrepEval(const multiSample &samples)
 //    cv::integral(magImg, mWeightInteg, CV_64F);
 
 
-    for(int i=0; i<hists.size(); ++i)
+    for(size_t i=0; i<hists.size(); ++i)
         hists[i].release();
     hists.clear();
 }

@@ -1,7 +1,7 @@
 #include <cmath>
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include "mUtils.h"
+#include <PAWSS/mUtils.h>
 
 #define MAX_THRES 50
 
@@ -108,7 +108,7 @@ bool readGtFile(const std::string &filePath, std::vector<FloatRect> &BBs)
     }
 
     std::string gtLine;
-    float xmin, ymin, width, height;
+//    float xmin, ymin, width, height;
     while(getline(gtFile, gtLine))
     {
           std::vector<float> digits;
@@ -205,7 +205,7 @@ void scaleFrame(const float rWidth, const float rHeight, float &scaleWidth, floa
     }
     else
     {
-        scaleWidth = 1;
+        scaleWidth = 0.4;
         scaleHeight = scaleWidth;
     }
 }
@@ -242,7 +242,7 @@ void getUnionRect(const std::vector<FloatRect> &rects, FloatRect& union_r)
     float y_max = -FLT_MAX;
 
     FloatRect r;
-    for(int i=0; i < rects.size(); ++i)
+    for(size_t i=0; i < rects.size(); ++i)
     {
         r = rects[i];
         if(x_min > r.XMin())
@@ -266,7 +266,7 @@ void Polygon2Rect(const std::vector<float> &pts, FloatRect &rect)
     float y_min = FLT_MAX;
     float x_max = -FLT_MAX;
     float y_max = -FLT_MAX;
-    for(int i=0; i< pts.size()/2; ++i)
+    for(size_t i=0; i< pts.size()/2; ++i)
     {
         x_min = std::min(x_min, pts[2*i]);
         y_min = std::min(y_min, pts[2*i+1]);
@@ -285,7 +285,7 @@ FloatRect Polygon2Rect(const std::vector<float> &pts)
     float y_min = FLT_MAX;
     float x_max = -FLT_MAX;
     float y_max = -FLT_MAX;
-    for(int i=0; i< pts.size()/2; ++i)
+    for(size_t i=0; i< pts.size()/2; ++i)
     {
         x_min = std::min(x_min, pts[2*i]);
         y_min = std::min(y_min, pts[2*i+1]);
@@ -328,7 +328,7 @@ std::vector<float> estPrecision(const std::vector<FloatRect>& result, const std:
 
     // calculate L2 error distance
     std::vector<float> error;
-    for(int i=0; i<result.size(); ++i)
+    for(size_t i=0; i<result.size(); ++i)
     {
         float err = std::sqrtf( std::pow(result[i].XCentre()-gt[i].XCentre(), 2) + std::pow(result[i].YCentre()-gt[i].YCentre(), 2) );
         error.push_back(err);
