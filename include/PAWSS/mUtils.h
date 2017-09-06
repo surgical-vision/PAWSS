@@ -25,6 +25,7 @@ cv::Mat colorMap(const cv::Mat& img);
 bool readFramesFile(const std::string& filePath, int& startFrame, int& endFrame);
 bool readGtFile(const std::string& filePath, std::vector<FloatRect>& BBs);
 bool writeResultBBFile(const std::string& filePath, const std::vector<FloatRect>& BBs);
+bool writeMOTResultBBFile(const std::vector<std::string> &filePath, std::vector<FloatRect>** BBs);
 bool writePrecisionFile(const std::string& filePath, const std::vector<float>& prec);
 
 std::vector<float> estPrecision(const std::vector<FloatRect>& result, const std::vector<FloatRect>& gt);

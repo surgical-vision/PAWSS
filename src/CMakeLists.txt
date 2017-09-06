@@ -2,23 +2,22 @@
 list(APPEND LIB_INC_DIR "${PROJECT_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}/include")
 
 # Head only includes
-set(INCDIR ${PROJECT_SOURCE_DIR}/include)
+set(INCDIR ${PROJECT_SOURCE_DIR}/include/PAWSS)
 file(GLOB HEADERS
-	${INCDIR}/PAWSS/*.h
-	${INCDIR}/PAWSS/Features/*.h
-	${INCDIR}/PAWSS/GraphUtils/*.h)
-# file(GLOB_RECURSE HEADERS RELATIVE ${INCDIR} PAWSS/*.h)
+	${INCDIR}/*.h*
+	${INCDIR}/Features/*.h*
+	${INCDIR}/GraphUtils/*.h*)
+
 ## Store list of source lists
 file(GLOB SOURCES 
 	${PROJECT_SOURCE_DIR}/src/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Features/*.cpp
 	${PROJECT_SOURCE_DIR}/src/GraphUtils/*.cpp)
-# file(GLOB_RECURSE SOURCES RELATIVE ${PROJECT_SOURCE_DIR} src/*.cpp)
 
 
 # message(STATUS ${INCDIR})
 # message(STATUS ${PROJECT_SOURCE_DIR})
-# message(STATUS ${HEADERS})
+ message(STATUS ${HEADERS})
 # message(STATUE ${SOURCES})
 
 set(OpenCV_DIR "/usr/local/opt/opencv3/share/OpenCV")
@@ -113,6 +112,5 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAM
         DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 install(EXPORT ${PROJECT_NAME}Targets DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 
-message(STATUS "wa")
 message(STATUS ${PROJECT_CMAKE_DIR})
 message(STATUS ${CMAKECONFIG_INSTALL_DIR})

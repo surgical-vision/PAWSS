@@ -97,8 +97,9 @@ Config::Config(const std::string& path)
 
     }
 
-    mBbFileName = FeatureName(mFeatureKernelPair.mFeature) + "_" + std::to_string(mPatchNumX) + "_" + std::to_string(mPatchNumY) + "_" + ScaleName(mScaleType) + "_bb.txt";
-    mPrecFileName = FeatureName(mFeatureKernelPair.mFeature) + "_" + std::to_string(mPatchNumX) + "_" + std::to_string(mPatchNumY) + "_" + ScaleName(mScaleType) + "_prec.txt";
+    mBbFileNamePrefix = FeatureName(mFeatureKernelPair.mFeature) + "_" + std::to_string(mPatchNumX) + "_" + std::to_string(mPatchNumY) + "_" + ScaleName(mScaleType);
+    mBbFileName = mBbFileNamePrefix + "_bb.txt";
+    mPrecFileName = mBbFileNamePrefix + "_prec.txt";
 
     if(mUseCamera)
     {

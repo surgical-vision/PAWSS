@@ -16,7 +16,9 @@ saveBoundingBox = 0
 
 # if there exists ground truth for the sequence, savePrecisionFile indicates whether computing the precision rate for that sequence.
 # If usingCamera, automatically set to 0.
-savePrecisionFile = 1
+savePrecisionFile = 0
+
+seed = 0
 
 # base path for video sequences.
 # sequenceBasePath = /Users/xiaofeidu/mData/retinal_dataset

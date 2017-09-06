@@ -1,0 +1,51 @@
+# quiet mode disables all visual output (for experiments).
+quietMode =0
+
+# debug mode enables additional drawing and visualisation.
+debugMode = 0
+
+# useCamera enables webcam
+useCamera = 0
+
+# saveFrame indicates whether saving the tracked frame image
+saveFrame = 0
+
+# saveBoundingBox indicates whether saving the tracked bounding box file. 
+# If usingCamera, automatically set to 0.
+saveBoundingBox = 0
+
+# if there exists ground truth for the sequence, savePrecisionFile indicates whether computing the precision rate for that sequence.
+# If usingCamera, automatically set to 0.
+savePrecisionFile = 0
+
+# base path for video sequences.t
+# sequenceBasePath = /Users/xiaofeidu/mData/obt
+sequenceBasePath = /Users/xiaofeidu/mData/surgical_instrument/claudia
+
+# video sequence to run the tracker on.
+# seqName = Coke
+seqName = seq3
+
+# patch number
+patchNumX = 6
+patchNumY = 6
+
+# seed for random number generator.
+seed = 0
+
+# SVM regularization parameter.
+svmC = 100.0
+# SVM budget size (0 = no budget).
+svmBudgetSize = 100
+
+# image features to use.
+# format is: feature kernel [kernel-params]
+# where:
+#   feature = patchGrad/patchGrayGrad/patchRgb/patchRgbGrad/patchHsv/patchHsvGrad/patchMotion/patchRgbMotion/patchHsvMotion
+#   kernel = linear/intersection
+#   for kernel=gaussian, kernel-params is sigma (not implemented…)
+#
+feature = patchHsvGrad linear
+
+# Tracker scale type: one/gradual/all
+scaleType = all
