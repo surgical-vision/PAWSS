@@ -144,7 +144,7 @@ bool trackSequence(Config& conf, const size_t seqIdx)
 
     std::cout << "wa";
     // scale the bounding box
-    scaleH = 0.2f;
+    scaleH = 0.3f;
     scaleW = scaleH;
 
     // declare the tracker
