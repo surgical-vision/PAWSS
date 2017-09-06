@@ -175,6 +175,17 @@ bool writeResultBBFile(const std::string &filePath, const std::vector<FloatRect>
     return true;
 }
 
+bool writeMOTResultBBFile(const std::vector<std::string> &filePath, std::vector<FloatRect> **BBs)
+{
+    assert(filePath.size() == sizeof(BBs)/sizeof(BBs[0]));
+    for (size_t i = 0; i < filePath.size(); ++i)
+    {
+        if(!writeResultBBFile(filePath[i], *BBs[i]))
+            return false;
+    }
+    return true;
+}
+
 bool writePrecisionFile(const std::string& filePath, const std::vector<float>& prec)
 {
     std::ofstream precFile(filePath, std::ios::out);

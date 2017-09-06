@@ -58,6 +58,7 @@ public:
     std::vector<std::string> mSeqNames;
     std::string mSeqName;
     std::string mBbFileName;
+    std::string mBbFileNamePrefix;
     std::string mPrecFileName;
 
     int mSeed;

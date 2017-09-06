@@ -325,7 +325,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        configPath = "../../config.txt";
+        configPath = "../../../config_mot.txt";
     }
 
     // read config file
